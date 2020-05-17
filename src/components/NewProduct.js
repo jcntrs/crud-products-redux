@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductAction } from '../actions/productsAction';
 
-const NewProduct = () => {
+const NewProduct = ({ history }) => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
+
+    const loading = useSelector(state => state.products.loading);
+    const error = useSelector(state => state.products.error);
+    console.log(loading)
 
     const dispatch = useDispatch()
 
@@ -19,6 +23,7 @@ const NewProduct = () => {
             name,
             price
         });
+        history.push('/');
     }
 
     return (
@@ -57,6 +62,8 @@ const NewProduct = () => {
                                 Agregar
                             </button>
                         </form>
+                        {loading && <p>Cargando...</p>}
+                        {error && <p className="alert alert-danger p2 mt-4 text-center">Hubo un error</p>}
                     </div>
                 </div>
             </div>
