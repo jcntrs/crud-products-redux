@@ -6,7 +6,10 @@ import {
     ERROR_ADDING_PRODUCT,
     PRODUCTS_DOWNLOAD,
     SUCCESSFUL_PRODUCTS_DOWNLOAD,
-    WRONG_PRODUCTS_DOWNLOAD
+    WRONG_PRODUCTS_DOWNLOAD,
+    DELETE_PRODUCT,
+    SUCCESSFUL_PRODUCT_DELETE,
+    WRONG_PRODUCT_DELETE
 } from '../types';
 
 export const addProductAction = product => {
@@ -71,5 +74,37 @@ const successfulProductsDownload = products => ({
 
 const wrongProductsDownload = () => ({
     type: WRONG_PRODUCTS_DOWNLOAD,
+    payload: true
+})
+
+export const deleteProductAction = id => {
+    return async (dispatch) => {
+        dispatch(deleteProduct(id));
+        try {
+            await axiosClient.delete(`/productos/${id}`);
+            dispatch(successfulProductDelete());
+            Swal.fire(
+                'Eliminado',
+                'El producto se eliminó correctamente',
+                'success'
+            );
+        } catch (error) {
+            console.log(error)
+            dispatch(wrongProductDelete());
+        }
+    }
+}
+
+const deleteProduct = id => ({
+    type: DELETE_PRODUCT,
+    payload: id
+})
+
+const successfulProductDelete = () => ({
+    type: SUCCESSFUL_PRODUCT_DELETE
+})
+
+const wrongProductDelete = () => ({
+    type: WRONG_PRODUCT_DELETE,
     payload: true
 })
