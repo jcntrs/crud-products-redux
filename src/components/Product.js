@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { deleteProductAction } from '../actions/productsAction';
+import { deleteProductAction, editProductAction } from '../actions/productsAction';
 import Swal from 'sweetalert2';
 
 const Product = ({ product }) => {
@@ -9,8 +9,9 @@ const Product = ({ product }) => {
     const { name, price, id } = product;
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
-    const handleClick = id => {
+    const handleClickDelete = id => {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Un producto eliminado no se podrá recuperar",
@@ -27,13 +28,18 @@ const Product = ({ product }) => {
         });
     }
 
+    const handleClickEdit = id => {
+        dispatch(editProductAction(product));
+        history.push(`/productos/editar/${product.id}`);
+    }
+
     return (
         <tr>
             <td>{name}</td>
             <td><span className="font-weight-bold">$ {price}</span></td>
             <td className="acciones">
-                <Link to={`/productos/editar/${id}`} className="btn btn-warning mr-2">Editar</Link>
-                <button className="btn btn-danger" type="button" onClick={() => handleClick(id)}>Eliminar</button>
+                <button type="button" className="btn btn-warning mr-2" onClick={() => handleClickEdit(product)}>Editar</button>
+                <button className="btn btn-danger" type="button" onClick={() => handleClickDelete(id)}>Eliminar</button>
             </td>
         </tr>
     );

@@ -13,10 +13,9 @@ const Products = () => {
     const loading = useSelector(state => state.products.loading);
 
     useEffect(() => {
-        (() => {
-            dispatch(getProductsAction());
-            // eslint-disable-next-line
-        })()
+        const loadProducts = () => dispatch(getProductsAction());
+        loadProducts();
+        // eslint-disable-next-line
     }, []);
 
     return (

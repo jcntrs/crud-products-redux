@@ -9,7 +9,11 @@ import {
     WRONG_PRODUCTS_DOWNLOAD,
     DELETE_PRODUCT,
     SUCCESSFUL_PRODUCT_DELETE,
-    WRONG_PRODUCT_DELETE
+    WRONG_PRODUCT_DELETE,
+    EDIT_PRODUCT,
+    SUCCESSFUL_PRODUCT_EDIT,
+    WRONG_PRODUCT_EDIT,
+    START_EDIT_PRODUCT
 } from '../types';
 
 export const addProductAction = product => {
@@ -106,5 +110,43 @@ const successfulProductDelete = () => ({
 
 const wrongProductDelete = () => ({
     type: WRONG_PRODUCT_DELETE,
+    payload: true
+})
+
+export const editProductAction = product => {
+    return (dispatch) => {
+        dispatch(editProduct(product));
+    }
+}
+
+const editProduct = product => ({
+    type: EDIT_PRODUCT,
+    payload: product
+})
+
+export const startEditProductAction = product => {
+    return async (dispatch) => {
+        dispatch(startEditProduct(product));
+        try {
+            await axiosClient.put(`productos/${product.id}`, product);
+            dispatch(succesfulProductEdit(product));
+        } catch (error) {
+            console.log(error)
+            dispatch(wrongProductEdit());
+        }
+    }
+}
+
+const startEditProduct = () => ({
+    type: START_EDIT_PRODUCT
+})
+
+const succesfulProductEdit = product => ({
+    type: SUCCESSFUL_PRODUCT_EDIT,
+    payload: product
+})
+
+const wrongProductEdit = () => ({
+    type: WRONG_PRODUCT_EDIT,
     payload: true
 })

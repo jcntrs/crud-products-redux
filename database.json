@@ -4,6 +4,11 @@
       "name": "Jugo de Naranja",
       "price": "300",
       "id": 3
+    },
+    {
+      "name": "product 001",
+      "price": "500",
+      "id": 4
     }
   ]
 }
