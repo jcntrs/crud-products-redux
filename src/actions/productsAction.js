@@ -10,25 +10,24 @@ import {
     DELETE_PRODUCT,
     SUCCESSFUL_PRODUCT_DELETE,
     WRONG_PRODUCT_DELETE,
-    EDIT_PRODUCT,
     SUCCESSFUL_PRODUCT_EDIT,
     WRONG_PRODUCT_EDIT,
-    START_EDIT_PRODUCT
+    START_EDIT_PRODUCT,
+    SET_PRODUCT_EDIT
 } from '../types';
 
 export const addProductAction = product => {
     return async (dispatch) => {
         dispatch(addProduct());
         try {
-            await axiosClient.post('/productos', product);
-            dispatch(successfullyAddedProduct(product));
+            const newProduct = await axiosClient.post('/api/products', product);
+            dispatch(successfullyAddedProduct(newProduct.data));
             Swal.fire(
                 'Correcto',
                 'El producto se agregó correctamente',
                 'success'
             );
         } catch (error) {
-            console.log(error)
             dispatch(errorAddingProduct(true));
             Swal.fire({
                 icon: 'error',
@@ -57,11 +56,9 @@ export const getProductsAction = () => {
     return async (dispatch) => {
         dispatch(productsDownload());
         try {
-            const response = await axiosClient.get('/productos');
+            const response = await axiosClient.get('/api/products');
             dispatch(successfulProductsDownload(response.data));
-            console.log(response.data)
         } catch (error) {
-            console.log(error)
             dispatch(wrongProductsDownload());
         }
     }
@@ -85,7 +82,7 @@ export const deleteProductAction = id => {
     return async (dispatch) => {
         dispatch(deleteProduct(id));
         try {
-            await axiosClient.delete(`/productos/${id}`);
+            await axiosClient.delete(`api/products/${id}`);
             dispatch(successfulProductDelete());
             Swal.fire(
                 'Eliminado',
@@ -93,7 +90,6 @@ export const deleteProductAction = id => {
                 'success'
             );
         } catch (error) {
-            console.log(error)
             dispatch(wrongProductDelete());
         }
     }
@@ -113,25 +109,13 @@ const wrongProductDelete = () => ({
     payload: true
 })
 
-export const editProductAction = product => {
-    return (dispatch) => {
-        dispatch(editProduct(product));
-    }
-}
-
-const editProduct = product => ({
-    type: EDIT_PRODUCT,
-    payload: product
-})
-
 export const startEditProductAction = product => {
     return async (dispatch) => {
-        dispatch(startEditProduct(product));
+        dispatch(startEditProduct());
         try {
-            await axiosClient.put(`productos/${product.id}`, product);
+            await axiosClient.put(`/api/products/${product._id}`, product);
             dispatch(succesfulProductEdit(product));
         } catch (error) {
-            console.log(error)
             dispatch(wrongProductEdit());
         }
     }
@@ -149,4 +133,15 @@ const succesfulProductEdit = product => ({
 const wrongProductEdit = () => ({
     type: WRONG_PRODUCT_EDIT,
     payload: true
+})
+
+export const setProductEditAction = productId => {
+    return dispatch => {
+        dispatch(setProductEdit(productId));
+    }
+}
+
+const setProductEdit = productId => ({
+    type: SET_PRODUCT_EDIT,
+    payload: productId
 })

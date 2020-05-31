@@ -1,12 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { deleteProductAction, editProductAction } from '../actions/productsAction';
+import { deleteProductAction } from '../actions/productsAction';
 import Swal from 'sweetalert2';
 
 const Product = ({ product }) => {
 
-    const { name, price, id } = product;
+    const { name, price, _id } = product;
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -28,9 +28,9 @@ const Product = ({ product }) => {
         });
     }
 
-    const handleClickEdit = id => {
-        dispatch(editProductAction(product));
-        history.push(`/productos/editar/${product.id}`);
+    const handleClickEdit = _id => {
+        // dispatch(editProductAction(product));
+        history.push(`/productos/editar/${_id}`);
     }
 
     return (
@@ -38,8 +38,8 @@ const Product = ({ product }) => {
             <td>{name}</td>
             <td><span className="font-weight-bold">$ {price}</span></td>
             <td className="acciones">
-                <button type="button" className="btn btn-warning mr-2" onClick={() => handleClickEdit(product)}>Editar</button>
-                <button className="btn btn-danger" type="button" onClick={() => handleClickDelete(id)}>Eliminar</button>
+                <button type="button" className="btn btn-warning mr-2" onClick={() => handleClickEdit(_id)}>Editar</button>
+                <button className="btn btn-danger" type="button" onClick={() => handleClickDelete(_id)}>Eliminar</button>
             </td>
         </tr>
     );

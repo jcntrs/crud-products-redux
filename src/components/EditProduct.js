@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startEditProductAction } from '../actions/productsAction';
+import { startEditProductAction, setProductEditAction } from '../actions/productsAction';
 import { useHistory } from 'react-router-dom';
 
-const EditProduct = () => {
+const EditProduct = props => {
 
+    const productId = props.match.params.id;
     const [product, setProduct] = useState({
         name: '',
         price: 0,
@@ -29,8 +30,14 @@ const EditProduct = () => {
     }
 
     useEffect(() => {
-        setProduct(editProduct);
+        const loadProductEdit = () => dispatch(setProductEditAction(productId));
+        loadProductEdit();
+        // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        editProduct && setProduct(editProduct[0]);
+    }, [editProduct]);
 
     return (
         <div className="row justify-content-center">

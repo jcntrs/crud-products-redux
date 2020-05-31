@@ -10,7 +10,9 @@ import {
     WRONG_PRODUCT_DELETE,
     EDIT_PRODUCT,
     SUCCESSFUL_PRODUCT_EDIT,
-    WRONG_PRODUCT_EDIT
+    WRONG_PRODUCT_EDIT,
+    START_EDIT_PRODUCT,
+    SET_PRODUCT_EDIT
 } from '../types';
 
 // Cada reducer tiene su propio state
@@ -24,6 +26,7 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case START_EDIT_PRODUCT:
         case PRODUCTS_DOWNLOAD:
         case ADD_PRODUCT:
             return {
@@ -33,8 +36,9 @@ export default function (state = initialState, action) {
         case SUCCESSFULLY_ADDED_PRODUCT:
             return {
                 ...state,
+                products: [...state.products, action.payload],
                 loading: false,
-                products: [...state.products, action.payload]
+                error: false
             }
         case WRONG_PRODUCT_EDIT:
         case WRONG_PRODUCT_DELETE:
@@ -42,8 +46,8 @@ export default function (state = initialState, action) {
         case ERROR_ADDING_PRODUCT:
             return {
                 ...state,
-                error: action.payload,
-                loading: false
+                loading: false,
+                error: action.payload
             }
         case SUCCESSFUL_PRODUCTS_DOWNLOAD:
             return {
@@ -60,7 +64,7 @@ export default function (state = initialState, action) {
         case SUCCESSFUL_PRODUCT_DELETE:
             return {
                 ...state,
-                products: state.products.filter(element => element.id !== state.deleteProduct),
+                products: state.products.filter(element => element._id !== state.deleteProduct),
                 deleteProduct: null
             }
         case EDIT_PRODUCT:
@@ -71,10 +75,16 @@ export default function (state = initialState, action) {
         case SUCCESSFUL_PRODUCT_EDIT:
             return {
                 ...state,
-                products: state.products.map(element => element.id === action.payload.id ? element = action.payload : element),
+                products: state.products.map(element => element._id === action.payload._id ? element = action.payload : element),
+                loading: false,
                 editProduct: null
             }
-
+        case SET_PRODUCT_EDIT:
+            return {
+                ...state,
+                editProduct: state.products.filter(element => element._id === action.payload)
+            }
+        
         default:
             return state;
     }
