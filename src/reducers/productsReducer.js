@@ -12,7 +12,9 @@ import {
     SUCCESSFUL_PRODUCT_EDIT,
     WRONG_PRODUCT_EDIT,
     START_EDIT_PRODUCT,
-    SET_PRODUCT_EDIT
+    SET_PRODUCT_EDIT,
+    START_SET_EDIT_PRODUCT,
+    WRONG_SET_PRODUCT_EDIT
 } from '../types';
 
 // Cada reducer tiene su propio state
@@ -26,6 +28,7 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case START_SET_EDIT_PRODUCT:
         case START_EDIT_PRODUCT:
         case PRODUCTS_DOWNLOAD:
         case ADD_PRODUCT:
@@ -40,6 +43,7 @@ export default function (state = initialState, action) {
                 loading: false,
                 error: false
             }
+        case WRONG_SET_PRODUCT_EDIT:
         case WRONG_PRODUCT_EDIT:
         case WRONG_PRODUCT_DELETE:
         case WRONG_PRODUCTS_DOWNLOAD:
@@ -82,9 +86,11 @@ export default function (state = initialState, action) {
         case SET_PRODUCT_EDIT:
             return {
                 ...state,
-                editProduct: state.products.filter(element => element._id === action.payload)
+                loading: false,
+                error: false,
+                editProduct: action.payload
             }
-        
+
         default:
             return state;
     }

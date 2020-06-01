@@ -13,7 +13,9 @@ import {
     SUCCESSFUL_PRODUCT_EDIT,
     WRONG_PRODUCT_EDIT,
     START_EDIT_PRODUCT,
-    SET_PRODUCT_EDIT
+    SET_PRODUCT_EDIT,
+    START_SET_EDIT_PRODUCT,
+    WRONG_SET_PRODUCT_EDIT
 } from '../types';
 
 export const addProductAction = product => {
@@ -136,12 +138,27 @@ const wrongProductEdit = () => ({
 })
 
 export const setProductEditAction = productId => {
-    return dispatch => {
-        dispatch(setProductEdit(productId));
+    return async dispatch => {
+        dispatch(startSetEditProduct());
+        try {
+            const response = await axiosClient.get(`/api/products/${productId}`)
+            dispatch(setProductEdit(response.data));
+        } catch (error) {
+            dispatch(wrongSetProductEdit());
+        }
     }
 }
 
-const setProductEdit = productId => ({
+const startSetEditProduct = () => ({
+    type: START_SET_EDIT_PRODUCT
+})
+
+const setProductEdit = product => ({
     type: SET_PRODUCT_EDIT,
-    payload: productId
+    payload: product
+})
+
+const wrongSetProductEdit = () => ({
+    type: WRONG_SET_PRODUCT_EDIT,
+    payload: true
 })
